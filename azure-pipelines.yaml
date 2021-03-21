@@ -1,0 +1,43 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+    - develop
+    - release/*
+    - feature/*
+    - bugfix/*
+    - hotfix/*
+#    - refs/tags/*
+  paths:
+    exclude:
+    - docs/*
+    - wiki/*
+
+pool:
+  vmImage: 'windows-latest'
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: templates/templates
+
+steps:
+# Check out the code and keep the token so we can tag the repository
+- checkout: self
+  persistCredentials: true
+
+- template: library-template.yaml@templates
+# NB Override parameters here as needed
+  parameters:
+#    solution: '**/*.sln'
+#    buildPlatform: 'Any CPU'
+#    buildConfiguration: 'Release'
+#    nugetFeed: '2e6ddbfc-908d-4511-9857-6a728266d26c'
+    testProjects: '**/*.sln'
+#    testFilter: '(TestCategory!=Integration)&(TestCategory!=Smoke)'
+#    testSettings: 'coverlet.runsettings'
+    publishPackages: false
+    codeCoverage: true
+    gitTag: false
