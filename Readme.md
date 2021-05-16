@@ -54,6 +54,17 @@ To get the best results and the easiest formatting we use the following settings
 1. All documents heading should start from H2, we consider each document to be its own H1 and then automatically infer the actual level based on the folder structure 
 1. Do not replicate the document title as a heading, we do that for you (see `-autoheading`) 
 
+## Build pipelines
+
+Although you can run the tool locally, the most likely usage is as part of an Azure DevOps pipeline to produce your documentation on a regular or ad-hoc basis.
+
+To assist with this, a set of sample [Azure DevOps pipelines](https://dev.azure.com/paulhatcher/wikiexport/_git/wikiexport.samples) is maintained and these cover all the use cases we have needed to date e.g.
+
+* Extract a section or entire wiki...
+* Convert to docx, PDF or HTML...
+* Using either a Windows or Linux build agent
+
+There are examples using different LaTex distributions as these have an impact on the speed of generation due to download size.
 
 ## Local builds
 
@@ -63,7 +74,7 @@ After building from the root directory of the project
 
 or 
 
-`dotnet tool update wikiexport -g --add-source build\Debug\WikiExport\netcoreapp3.1`
+`dotnet tool update dotnet-wikiexport -g --add-source build\Debug\WikiExport\netcoreapp3.1`
 
 
 # License
