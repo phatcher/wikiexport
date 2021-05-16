@@ -22,6 +22,7 @@ resources:
     - repository: templates
       type: git
       name: templates/templates
+      ref: dotnetcli
 
 steps:
 # Check out the code and keep the token so we can tag the repository
@@ -34,10 +35,10 @@ steps:
 #    solution: '**/*.sln'
 #    buildPlatform: 'Any CPU'
 #    buildConfiguration: 'Release'
-#    nugetFeed: '2e6ddbfc-908d-4511-9857-6a728266d26c'
+    nugetFeed: '33ee36b3-29ec-4a24-9150-ff4a3fcfcbfe'
     testProjects: '**/*.sln'
 #    testFilter: '(TestCategory!=Integration)&(TestCategory!=Smoke)'
 #    testSettings: 'coverlet.runsettings'
-    publishPackages: false
+    publishPackages: true
     codeCoverage: true
     gitTag: false

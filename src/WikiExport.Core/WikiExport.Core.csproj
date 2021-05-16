@@ -2,6 +2,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>WikiExport</RootNamespace>
+    <Product>wikexport</Product>
+    <Copyright>Copyright © 2021 Paul Hatcher</Copyright>
+    <Authors>Paul Hatcher</Authors>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />

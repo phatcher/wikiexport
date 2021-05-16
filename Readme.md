@@ -1,11 +1,12 @@
 # Introduction
 
-The WikiExport project it a dotnet tool that allows you to export a part of, or an entire Azure DevOps wiki into a single Markdown file.
+The [WikiExport project](https://github.com/phatcher/wikiexport) it a dotnet tool that allows you to export a part of, or an entire Azure DevOps wiki into a single Markdown file.
 
 This can then be passed into a tool such as `pandoc` to convert to another format such as Word (docx) or PDF.
 
 [![NuGet](https://img.shields.io/nuget/v/dotnet-wikiexport.svg)](https://www.nuget.org/packages/dotnet-wikiexport/)
 [![Build Status](https://dev.azure.com/paulhatcher/wikiexport/_apis/build/status/phatcher.wikiexport?repoName=phatcher%2Fwikiexport&branchName=main)](https://dev.azure.com/paulhatcher/wikiexport/_build/latest?definitionId=1&repoName=phatcher%2Fwikiexport&branchName=main)
+
 
 # Installation
 

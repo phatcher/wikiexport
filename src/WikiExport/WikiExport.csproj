@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Description>Azure DevOps wiki export tool</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -12,9 +12,13 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <PackageId>dotnet-wikiexport</PackageId>
     <Title>Wiki Export</Title>
+    <Product>wikexport</Product>
     <Copyright>Copyright © 2021 Paul Hatcher</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/phatcher/wikiexport</PackageProjectUrl>
     <PackageTags>utility devops wiki</PackageTags>
+    <RepositoryUrl>https://github.com/phatcher/wikiexport</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <Authors>Paul Hatcher</Authors>
     <OutputPath>$(SolutionDir)/build/$(Configuration)/$(AssemblyName)/$(TargetFramework)/</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
