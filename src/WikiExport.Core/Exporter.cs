@@ -40,7 +40,12 @@ namespace WikiExport
             var targetFile = options.SelectTargetFile();
 
             // Ensure that the directory exists
-            Directory.CreateDirectory(options.TargetPath);
+            if (!Directory.Exists(options.TargetPath))
+            {
+                Directory.CreateDirectory(options.TargetPath);
+            }
+
+            logger.LogInformation($"Creating output directory: ${options.TargetPath}");
 
             // And start processing
             var fileName = options.TargetPath.WikiFileName(targetFile);
@@ -93,8 +98,9 @@ namespace WikiExport
             var attachmentSourcePath = options.SourcePath.AttachmentPath();
 
             var attachmentTargetPath = Path.Combine(options.TargetPath, targetFile + "-attachments");
+            logger.LogInformation($"Attachments will be output to ${attachmentTargetPath}");
 
-            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption);
+            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption, logger);
 
             // Get the data
             var source = File.ReadAllText(fileName);
@@ -180,22 +186,26 @@ namespace WikiExport
             private bool retainCaption;
             private bool found;
             private DirectoryInfo directory;
+            private ILogger logger;
 
-            public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption)
+            public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption, ILogger logger)
             {
                 this.sourcePath = sourcePath;
                 this.targetPath = targetPath;
                 this.retainCaption = retainCaption;
+                this.logger = logger;
                 found = false;
             }
 
             public string Replace(Match match)
             {
-                if (found == false)
+                if (!found && !Directory.Exists(targetPath))
                 {
                     // Ensure the target directory exists
                     // Create on first capture only - avoids empty directory if no attachments
                     directory = Directory.CreateDirectory(targetPath);
+                    logger.LogInformation($"Creating local attachments folder: ${targetPath}");
+
                     found = true;
                 }
 

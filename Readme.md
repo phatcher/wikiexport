@@ -46,6 +46,7 @@ The options default settings have been initialized to values that "just work", i
 * *-l* *--autolevel*: Whether to adjust the markdown headings according to the nesting level. Defaults to true
 * *-c* *--retainCaption*: Whether to retain caption headings. Defaults to false
 * *-y* *--replaceHyphen*: Whether to replace hyphens in the document title/file name. Defaults to true
+* *--log*: Set the logging level. Defaults to Warning
 
 ## Wiki Formatting
 

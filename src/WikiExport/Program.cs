@@ -29,7 +29,7 @@ namespace WikiExport
                             {
                                 bldr.ClearProviders();
                                 bldr.AddConsole()
-                                    .SetMinimumLevel(LogLevel.Error);
+                                    .SetMinimumLevel(options.Logging);
                             })
                             .Build();
 

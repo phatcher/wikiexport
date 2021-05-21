@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Microsoft.Extensions.Logging;
 
 namespace WikiExport
 {
@@ -13,6 +14,7 @@ namespace WikiExport
             AutoLevel = true;
             ProjectInTitle = true;
             ReplaceHyphen = true;
+            Logging = LogLevel.Warning;
         }
 
         /// <summary>
@@ -80,5 +82,11 @@ namespace WikiExport
         
         [Option('y', "replaceHyphen", Required = false, HelpText = "Whether we replace hyphens in the document title/file name")]
         public bool ReplaceHyphen { get; set; }
+
+        /// <summary>
+        /// Get or set the logging level
+        /// </summary>
+        [Option("log", Required = false, HelpText = "Set the logging level")]
+        public LogLevel Logging { get; set; }
     }
 }

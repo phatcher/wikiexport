@@ -2,7 +2,7 @@
   "profiles": {
     "WikiExport": {
       "commandName": "Project",
-      "commandLineArgs": "-s C:\\Devel\\MunichRe\\KISME360.wiki -f Security-Concept -t C:\\Devel\\WikiOutput"
+      "commandLineArgs": "-s C:\\Devel\\MunichRe\\KISME360.wiki -f Security-Concept -t C:\\Devel\\WikiOutput --log Debug"
     }
   }
 }

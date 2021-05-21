@@ -12,6 +12,7 @@ namespace WikiExport.Test
     public class ExporterFixture
     {
         [TestCase("Samples\\Sample.wiki\\S1", "SS1")]
+        [TestCase("Samples\\Sample.wiki\\S1\\SS1", null)]
         [TestCase("Samples\\Sample.wiki\\S1", null)]
         [TestCase("Samples\\Sample.wiki\\S2", null)]
         [TestCase("Samples\\Sample.wiki", null)]
