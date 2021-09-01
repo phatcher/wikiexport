@@ -1,27 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>WikiExport.Test</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Samples\Sample.wiki\.order" />
-    <None Remove="Samples\Sample.wiki\Main.md" />
-    <None Remove="Samples\Sample.wiki\S1.md" />
-    <None Remove="Samples\Sample.wiki\S1\.order" />
-    <None Remove="Samples\Sample.wiki\S1\Bar.md" />
-    <None Remove="Samples\Sample.wiki\S1\Foo.md" />
-    <None Remove="Samples\Sample.wiki\S1\SS1.md" />
-    <None Remove="Samples\Sample.wiki\S1\SS1\.order" />
-    <None Remove="Samples\Sample.wiki\S1\SS1\Zah.md" />
-    <None Remove="Samples\Sample.wiki\S2.md" />
-    <None Remove="Samples\Sample.wiki\S2\.order" />
-    <None Remove="Samples\Sample.wiki\S2\Bar.md" />
-    <None Remove="Samples\Sample.wiki\S2\Foo.md" />
-    <None Remove="Samples\Sample2\.order" />
-    <None Remove="Samples\Sample2\Main.md" />
-    <None Remove="Samples\Sample2\S1.md" />
-    <None Remove="Samples\Sample2\S2.md" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="Samples\Sample.wiki\.order">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -86,10 +67,38 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Results\" />
     <Folder Include="Samples\Sample.wiki\.attachments\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WikiExport.Core\WikiExport.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Results\Defaults\Sample S1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Results\Defaults\Sample S2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Results\Defaults\Sample SS1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Results\Defaults\Sample.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Results\Defaults\Sample2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Results\NoAppendix\Sample.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\Sample.wiki\Appendix-A%252D-Bibliography.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\Sample.wiki\Appendix-A%252D-Bibliography\.order">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\Sample.wiki\Appendix-A%252D-Bibliography\Introduction.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -25,11 +25,11 @@ namespace WikiExport
 
                         var host = Host.CreateDefaultBuilder()
                             .ConfigureServices((b, c) => { c.AddSingleton(options); })
-                            .ConfigureLogging(bldr =>
+                            .ConfigureLogging(l =>
                             {
-                                bldr.ClearProviders();
-                                bldr.AddConsole()
-                                    .SetMinimumLevel(options.Logging);
+                                l.ClearProviders();
+                                l.AddConsole()
+                                 .SetMinimumLevel(options.Logging);
                             })
                             .Build();
 

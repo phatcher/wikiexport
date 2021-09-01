@@ -1,9 +1,50 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net;
 
 namespace WikiExport
 {
     public static class ExportOptionsExtensions
     {
+        /// <summary>
+        /// Tidy up option values
+        /// </summary>
+        /// <param name="options"></param>
+        public static void Tidy(this ExportOptions options)
+        {
+            //options.SourcePath = options.SourcePath?.Replace(' ', '-');
+            options.SourcePath = options.SourcePath?.WikiEncode().FixupPath();
+            options.SourceFile = options.SourceFile?.WikiEncode();
+        }
+
+        /// <summary>
+        /// Validate the option values
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="error"></param>
+        /// <returns>true if no fatal errors, otherwise false</returns>
+        public static bool Validate(this ExportOptions options, out string error)
+        {
+            error = string.Empty;
+            if (!Directory.Exists(options.SourcePath))
+            {
+                error += $"Source path '{options.SourcePath}' does not exist\n";
+            }
+
+            if (string.IsNullOrEmpty(options.TargetPath))
+            {
+                error += "Target path not specified\n";
+            }
+
+            if (options.TargetPath == options.SourcePath)
+            {
+                error += "Source and target paths may not be the same";
+            }
+
+            return error.Length == 0;
+        }
+
         /// <summary>
         /// Determine the project name based on the options.
         /// </summary>
@@ -36,6 +77,23 @@ namespace WikiExport
         /// <returns></returns>
         public static string DocumentTitle(this ExportOptions options)
         {
+            var value = options.DocumentTitleBase().WikiDecode();
+
+            if (options.ProjectInTitle)
+            {
+                value = string.Format(options.TitleFormat, options.ProjectName().WikiDecode(), value);
+            }
+
+            return value.Trim();
+        }
+
+        /// <summary>
+        /// Determine the base document title to use
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static string DocumentTitleBase(this ExportOptions options)
+        {
             if (!string.IsNullOrEmpty(options.Title))
             {
                 return options.Title;
@@ -61,14 +119,29 @@ namespace WikiExport
                 value = new DirectoryInfo(options.SourcePath).Name;
             }
 
-            if (options.ProjectInTitle)
+            return value;
+        }
+
+        /// <summary>
+        /// Determine the file heading to use.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="name"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        /// <remarks>Not responsible for determining level for appendices, section processing does that.</remarks>
+        public static string FileHeading(this ExportOptions options, string name, int level)
+        {
+            // Decode it, so we get to simple characters;
+            var result = name.WikiDecode();
+
+            // Either we don't need to process for appendices
+            if (options.AppendixProcessing)
             {
-                value = $"{options.ProjectName()}-{value}";
+                result = result.AppendixName();
             }
 
-            value = options.ReplaceHyphen ? value.Replace('-', ' ') : value;
-
-            return value.Trim();
+            return $"{new string('#', level)} {result}";
         }
 
         /// <summary>
@@ -103,6 +176,11 @@ namespace WikiExport
         /// <remarks>Uses the existence of an .order file to determine wiki directories</remarks>
         public static string WikiRoot(this string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                return null;
+            }
+
             string root = null;
 
             var candidate = new DirectoryInfo(path);
@@ -164,6 +242,147 @@ namespace WikiExport
 
             // Note that the directory might not exist if we have no attachments
             return Path.Combine(root, ".attachments");
+        }
+
+        /// <summary>
+        /// Encode to the wiki file naming convention
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string WikiEncode(this string name)
+        {
+            var result = name;
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                // Handle special characters 
+                result = WebUtility.UrlEncode(result);
+                // Specific replaces for wiki names
+                result = result?.Replace("-", "%2D");
+                result = result?.Replace("+", "-");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Decode from the wiki file naming convention
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string WikiDecode(this string name)
+        {
+            var result = name;
+            if (!string.IsNullOrEmpty(result))
+            {
+                // Replace the hyphens first so we don't confuse with %2D
+                result = result?.Replace('-', ' ');
+                result = WebUtility.UrlDecode(result);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Determine if we are an appendix
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool IsAppendix(this string name)
+        {
+            var x = name?.ToUpperInvariant();
+            if (string.IsNullOrEmpty(x))
+            {
+                return false;
+            }
+
+            return x.StartsWith("APPENDIX");
+        }
+
+        /// <summary>
+        /// Determine if we are an appendix section
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool IsAppendixSection(this string name)
+        {
+            var x = name?.ToUpperInvariant();
+            if (string.IsNullOrEmpty(x))
+            {
+                return false;
+            }
+
+            return x.StartsWith("APPENDICES");
+        }
+
+        /// <summary>
+        /// Get the name of an appendix from its title.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string AppendixName(this string name)
+        {
+            try
+            {
+                var ignore = new[] { ' ', ':', '-' };
+
+                if (!name.IsAppendix())
+                {
+                    return name;
+                }
+
+                var posn = 8;
+                while (posn < name.Length)
+                {
+                    var c = name[posn];
+                    if (ignore.Contains(c))
+                    {
+                        posn++;
+                        continue;
+                    }
+
+                    // Done if we find a letter/number
+                    if (char.IsLetterOrDigit(c))
+                    {
+                        if (ignore.Contains(name[posn + 1]))
+                        {
+                            // ...unless followed by an ignore character
+                            posn++;
+                            continue;
+                        }
+
+                        break;
+                    }
+                }
+
+                return name.Substring(posn);
+            }
+            catch (Exception)
+            {
+                // Don't crash, just return the name we started with
+                return name;
+            }
+        }
+
+        /// <summary>
+        /// Fixes up a path after url encoding it.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string FixupPath(this string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value.IndexOf("%3A", StringComparison.InvariantCultureIgnoreCase) == 1)
+                {
+                    // Just replace the first %2D with a colon as it's a drive letter
+                    value = $"{value[0]}:{value.Substring(4)}";
+                }
+                // So it works for path
+                value = value?.Replace("%5C", "\\");
+            }
+
+            return value;
         }
     }
 }

@@ -14,25 +14,20 @@ namespace WikiExport
         public Exporter(ILogger<Exporter> logger)
         {
             this.logger = logger;
+            ExportDate = DateTime.UtcNow;
         }
+
+        public DateTime ExportDate { get; set; }
 
         public void Export(ExportOptions options)
         {
-            if (!Directory.Exists(options.SourcePath))
-            {
-                logger.LogError($"Source path '{options.SourcePath}' does not exist");
-                return;
-            }
+            // Tidy up options info
+            options.Tidy();
 
-            if (string.IsNullOrEmpty(options.TargetPath))
+            // Now validate them
+            if (!options.Validate(out var error))
             {
-                logger.LogError("Target path not specified");
-                return;
-            }
-
-            if (options.TargetPath == options.SourcePath)
-            {
-                logger.LogError("Source and target paths may not be the same");
+                logger.LogCritical(error);
                 return;
             }
 
@@ -81,12 +76,14 @@ namespace WikiExport
         {
             // Write out some metadata
             writer.WriteLine("---");
-            // NOTE: Always replace hyphens here, displayed in document.
-            writer.WriteLine($"title: {options.DocumentTitle().Replace('-', ' ')}");
+            writer.WriteLine($"title: {options.DocumentTitle()}");
             writer.WriteLine($"author: {options.Author}");
-            writer.WriteLine($"date: {DateTime.UtcNow:d MMMM yyyy}");
-            // TODO: Option
-            writer.WriteLine("toc: yes");
+            writer.WriteLine($"date: {ExportDate:d MMMM yyyy}");
+            if (options.TableOfContents)
+            {
+                writer.WriteLine("toc: yes");
+            }
+
             writer.WriteLine("---");
         }
 
@@ -126,13 +123,19 @@ namespace WikiExport
             var sourceFile = path.WikiFileName(file);
             if (!File.Exists(sourceFile))
             {
-                logger.LogError($"No {file}.md in '{path}'");
+                logger.LogCritical($"No {file}.md in '{path}'");
                 return;
             }
 
             if (options.AutoHeader && level > 0)
             {
-                writer.WriteLine($"{new string('#', level)} {file.Replace("-", " ")}");
+                if (options.AppendixProcessing && file.IsAppendix())
+                {
+                    // Force the level so we get the appendix heading correct
+                    level = options.AppendixHeadingLevel;
+                }
+                var heading = options.FileHeading(file, level);
+                writer.WriteLine(heading);
             }
 
             foreach (var line in File.ReadAllLines(sourceFile))
@@ -146,7 +149,7 @@ namespace WikiExport
             }
 
             // Buffer line - options?
-            writer.WriteLine("");
+            writer.WriteLine(string.Empty);
 
             // See if we have a sub directory associated
             if (Directory.Exists(Path.Combine(path, file)))
@@ -168,7 +171,7 @@ namespace WikiExport
             var orderFile = path.WikiOrderingFile();
             if (!File.Exists(orderFile))
             {
-                logger.LogError($"No .order file in '{path}'");
+                logger.LogCritical($"No .order file in '{path}'");
                 return;
             }
 
@@ -181,9 +184,9 @@ namespace WikiExport
 
         private class AttachmentFixer
         {
-            private string sourcePath;
-            private string targetPath;
-            private bool retainCaption;
+            private readonly string sourcePath;
+            private readonly string targetPath;
+            private readonly bool retainCaption;
             private bool found;
             private DirectoryInfo directory;
             private ILogger logger;

@@ -13,18 +13,30 @@ namespace WikiExport
             AutoHeader = true;
             AutoLevel = true;
             ProjectInTitle = true;
-            ReplaceHyphen = true;
+            AppendixProcessing = true;
+            AppendixHeadingLevel = 6;
+            TableOfContents = true;
+            TitleFormat = "{0} {1}";
             Logging = LogLevel.Warning;
         }
 
         /// <summary>
         /// Get or set the project name, defaults to the source name less .wiki
         /// </summary>
-        [Option('p', "project", Required = false, HelpText = "Project name")]
+        [Option('p', "project", Required = false, HelpText = "Project name, defaults to the source name less .wiki")]
         public string Project { get; set; }
 
-        [Option("projectInTitle", Required = false, HelpText = "Whether to include the project in the title")]
+        /// <summary>
+        /// Get or set whether to include the project in the title
+        /// </summary>
+        [Option("projectInTitle", Default = true, Required = false, HelpText = "Whether to include the project in the title")]
         public bool ProjectInTitle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the title format
+        /// </summary>
+        [Option("titleFormat", Default = "{0} {1}", Required = false, HelpText = "Title formatting, can include 0:{project} and 1:{title}")]
+        public string TitleFormat { get; set; }
 
         /// <summary>
         /// Get or set the document title, default to source file name if not specified
@@ -53,7 +65,7 @@ namespace WikiExport
         /// <summary>
         /// Get or set the target path we will use
         /// </summary>
-        [Option('t', "target", Required = true, HelpText = "Target path")]
+        [Option('t', "target", Required = true, HelpText = "Target path to output to")]
         public string TargetPath { get; set; }
 
         /// <summary>
@@ -65,23 +77,38 @@ namespace WikiExport
         /// <summary>
         /// Gets or sets whether we add a heading for each content file (except for the top-most file)
         /// </summary>
-        [Option('h', "autoheading", Required = false, HelpText = "Whether we add a heading for each content file (except for the top-most file)")]
+        [Option('h', "autoheading", Default = true, Required = false, HelpText = "Whether we add a heading for each content file (except for the top-most file)")]
         public bool AutoHeader { get; set; }
 
         /// <summary>
         /// Gets or sets whether we add a heading for the including file (except for the top-most file)
         /// </summary>
-        [Option('l', "autolevel", Required = false, HelpText = "Whether to adjust the markdown headings according to the nesting level")]
+        [Option('l', "autolevel", Default = true, Required = false, HelpText = "Whether to adjust the markdown headings according to the nesting level")]
         public bool AutoLevel { get; set; }
 
         /// <summary>
         /// Gets or sets whether we retain attachment captions
         /// </summary>
-        [Option('c', "retainCaption", Required = false, HelpText = "Retain attachment captions")]
+        [Option('c', "retainCaption", Default = false, Required = false, HelpText = "Retain attachment captions")]
         public bool RetainCaption { get; set; }
-        
-        [Option('y', "replaceHyphen", Required = false, HelpText = "Whether we replace hyphens in the document title/file name")]
-        public bool ReplaceHyphen { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether we automatically detect appendices in the wiki
+        /// </summary>
+        [Option("appendix", Default = true, Required = false, HelpText = "Whether we automatically detect/process appendices")]
+        public bool AppendixProcessing { get; set; }
+
+        /// <summary>
+        /// Gets or sets the heading level at which appendices start.
+        /// </summary>
+        [Option("appendixLevel", Default = 6, Required = false, HelpText = "What heading level do appendices start from")]
+        public int AppendixHeadingLevel { get; set; }
+
+        /// <summary>
+        /// Gets or set whether we want a table of contents
+        /// </summary>
+        [Option("toc", Default = true, Required = false, HelpText = "Whether we want a table of contents")]
+        public bool TableOfContents { get; set; }
 
         /// <summary>
         /// Get or set the logging level

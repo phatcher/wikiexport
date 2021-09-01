@@ -1,7 +1,7 @@
 ---
 title: Sample S1
 author: 
-date: 21 March 2021
+date: 1 September 2021
 toc: yes
 ---
 # Foo
@@ -26,5 +26,5 @@ Zah content
 
 ### Zah Subsection
 
-Foo subsection content
+Zah subsection content
 

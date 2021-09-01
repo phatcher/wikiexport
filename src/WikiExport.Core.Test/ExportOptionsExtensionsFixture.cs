@@ -39,15 +39,133 @@ namespace WikiExport.Test
             Assert.That(candidate, Is.EqualTo(expected), "Project name differs");
         }
 
+        [TestCase("My-Title", 1, "# My Title")]
+        [TestCase("Conceptual-Level%3A-Behaviour", 2, "## Conceptual Level: Behaviour")]
+        [TestCase("Non%2DFunctional-Requirements", 3, "### Non-Functional Requirements")]
+        [TestCase("Appendix-A%3A-Bibliography", 1, "# Bibliography")]
+        public void FileHeading(string name, int level, string expected)
+        {
+            var options = new ExportOptions
+            {
+            };
+
+            var candidate = options.FileHeading(name, level);
+
+            Assert.That(candidate, Is.EqualTo(expected), "File heading differs");
+        }
+
+        [TestCase("My-Title", 1, "# My Title")]
+        [TestCase("Conceptual-Level%3A-Behaviour", 2, "## Conceptual Level: Behaviour")]
+        [TestCase("Non%2DFunctional-Requirements", 3, "### Non-Functional Requirements")]
+        [TestCase("Appendix-A%3A-Bibliography", 1, "# Appendix A: Bibliography")]
+        public void FileHeadingIgnoreAppendix(string name, int level, string expected)
+        {
+            var options = new ExportOptions
+            {
+                AppendixProcessing = false
+            };
+
+            var candidate = options.FileHeading(name, level);
+
+            Assert.That(candidate, Is.EqualTo(expected), "File heading differs");
+        }
+
+        [TestCase("My Title", "My-Title")]
+        [TestCase("Conceptual Level: Behaviour", "Conceptual-Level%3A-Behaviour")]
+        [TestCase("Non-Functional Requirements", "Non%2DFunctional-Requirements")]
+        public void WikiEncode(string name, string expected)
+        {
+            var candidate = name.WikiEncode();
+
+            Assert.That(candidate, Is.EqualTo(expected), "Name differs");
+        }
+
+        [TestCase("C:\\Sample.wiki\\S2-Foo\\S3: Bar", "C:\\Sample.wiki\\S2%2DFoo\\S3%3A-Bar")]
+        public void FixupPath(string name, string expected)
+        {
+            var candidate = name.WikiEncode().FixupPath();
+
+            Assert.That(candidate, Is.EqualTo(expected), "Name differs");
+        }
+
+        [TestCase("My-Title", "My Title")]
+        [TestCase("Conceptual-Level%3A-Behaviour", "Conceptual Level: Behaviour")]
+        [TestCase("Non%2DFunctional-Requirements", "Non-Functional Requirements")]
+        public void WikiDecode(string name, string expected)
+        {
+            var candidate = name.WikiDecode();
+
+            Assert.That(candidate, Is.EqualTo(expected), "Name differs");
+        }
+
+        [TestCase("My Title", "My Title")]
+        [TestCase("Appendix Bibliography", "Bibliography")]
+        [TestCase("Appendix: Bibliography", "Bibliography")]
+        [TestCase("Appendix - Bibliography", "Bibliography")]
+        [TestCase("Appendix A: Bibliography", "Bibliography")]
+        public void AppendixName(string name, string expected)
+        {
+            var candidate = name.AppendixName();
+
+            Assert.That(candidate, Is.EqualTo(expected), "Name differs");
+        }
+
+        [TestCase("Samples\\Sample.wiki\\S1\\SS1", null, "SS1")]
+        [TestCase("Samples\\Sample.wiki\\S1", "SS1", "SS1")]
+        [TestCase("Samples\\Sample.wiki\\S1", "My-Section", "My-Section")]
+        [TestCase("Samples\\Sample.wiki\\S2", null, "S2")]
+        [TestCase("Samples\\Sample.wiki", null, "")]
+        [TestCase("Samples\\Sample2", null, "")]
+        // This because we are not passing a proper wiki directory in
+        [TestCase("Samples", null, "Samples")]
+        public void DocumentTitleBaseFromWiki(string path, string file, string expected)
+        {
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath(path),
+                SourceFile = file
+            };
+
+            var candidate = options.DocumentTitleBase();
+
+            Assert.That(candidate, Is.EqualTo(expected), "DocumentTitle name differs");
+        }
+
         [Test]
-        public void DocumentTitleSpecified()
+        public void DocumentTitleBaseSpecified()
         {
             var expected = "Foo";
 
             var options = new ExportOptions
             {
+                SourcePath = "Samples\\Sample.wiki\\S1",
+                SourceFile = "My-Section",
                 Title = expected
             };
+
+            var candidate = options.DocumentTitleBase();
+
+            Assert.That(candidate, Is.EqualTo(expected), "DocumentTitle name differs");
+        }
+
+        /// <remarks>Variations on using wiki-derived vs explicit title are covered above</remarks>
+        [TestCase("P1-A", "My-Title", "", true, "P1 A My Title")]
+        [TestCase("P1-A", "My-Title", "{0}: {1}", true, "P1 A: My Title")]
+        [TestCase("P1-A", "My-Title", "", false, "My Title")]
+        [TestCase("P1-A", "Conceptual-Level%3A-Behaviour", "", true, "P1 A Conceptual Level: Behaviour")]
+        public void DocumentTitleFormatting(string projectName, string title, string format, bool includeProject, string expected)
+        {
+            var options = new ExportOptions
+            {
+                Project = projectName,
+                Title = title,
+                ProjectInTitle = includeProject,
+            };
+
+            if (!string.IsNullOrEmpty(format))
+            {
+                options.TitleFormat = format;
+            }
 
             var candidate = options.DocumentTitle();
 

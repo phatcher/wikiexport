@@ -51,9 +51,9 @@ Foo content
 
 Foo subsection content
 
-###### Bibliography
+# Appendix A- Bibliography
 An example of an appendix section
 
-####### Introduction
+## Introduction
 Intro of the appendix
 
