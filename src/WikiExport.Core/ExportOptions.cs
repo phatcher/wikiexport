@@ -113,7 +113,7 @@ namespace WikiExport
         /// <summary>
         /// Get or set the logging level
         /// </summary>
-        [Option("log", Required = false, HelpText = "Set the logging level")]
+        [Option("log", Default = LogLevel.Warning, Required = false, HelpText = "Set the logging level")]
         public LogLevel Logging { get; set; }
     }
 }

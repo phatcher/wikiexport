@@ -27,8 +27,7 @@ namespace WikiExport
             // Now validate them
             if (!options.Validate(out var error))
             {
-                logger.LogCritical(error);
-                return;
+                throw logger.LogRaiseException(error);
             }
 
             // Work out what to call the target
@@ -123,8 +122,7 @@ namespace WikiExport
             var sourceFile = path.WikiFileName(file);
             if (!File.Exists(sourceFile))
             {
-                logger.LogCritical($"No {file}.md in '{path}'");
-                return;
+                throw logger.LogRaiseException($"No {file}.md in '{path}'");
             }
 
             if (options.AutoHeader && level > 0)
@@ -171,8 +169,7 @@ namespace WikiExport
             var orderFile = path.WikiOrderingFile();
             if (!File.Exists(orderFile))
             {
-                logger.LogCritical($"No .order file in '{path}'");
-                return;
+                throw logger.LogRaiseException($"No .order file in '{path}'");
             }
 
             var files = File.ReadAllLines(orderFile);

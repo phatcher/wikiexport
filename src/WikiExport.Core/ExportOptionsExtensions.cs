@@ -39,9 +39,13 @@ namespace WikiExport
 
             if (options.TargetPath == options.SourcePath)
             {
-                error += "Source and target paths may not be the same";
+                error += "Source and target paths may not be the same\n";
             }
+            else if (options.TargetPath.StartsWith(options.SourcePath))
+            {
+                error += "Target path may not be subdirectory of source path\n";
 
+            }
             return error.Length == 0;
         }
 
@@ -380,6 +384,7 @@ namespace WikiExport
                 }
                 // So it works for path
                 value = value?.Replace("%5C", "\\");
+                value = value?.Replace("%2F", "/");
             }
 
             return value;

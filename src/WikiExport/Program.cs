@@ -41,6 +41,8 @@ namespace WikiExport
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                // Exit badly so we know we've failed
+                throw;
             }
         }
     }

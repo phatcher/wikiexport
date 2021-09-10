@@ -22,9 +22,67 @@ namespace WikiExport.Test
             Assert.That(candidate, Is.EqualTo(expected), "Project name differs");
         }
 
+        [TestCase("Samples/Sample2", true)]
+        [TestCase("Samples\\Sample2", true)]
+        [TestCase("Samples\\BadSample", false)]
+        public void ValidateSourcePath(string path, bool expected)
+        {
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath(path),
+                TargetPath = "Foo"
+            };
+
+            var candidate = options.Validate(out var error);
+            Assert.That(candidate, Is.EqualTo(expected), $"Differ: ${error}");
+        }
+
+        [Test]
+        public void ValidateTargetPathRequired()
+        {
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath("Samples"),
+                TargetPath = ""
+            };
+
+            var candidate = options.Validate(out var error);
+            Assert.That(candidate, Is.EqualTo(false));
+            Assert.That(error, Is.EqualTo("Target path not specified\n"), "Error differs");
+        }
+
+        [Test]
+        public void ValidatePathsDiffer()
+        {
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath("Samples"),
+                TargetPath = TestPath("Samples")
+            };
+
+            var candidate = options.Validate(out var error);
+            Assert.That(candidate, Is.EqualTo(false));
+            Assert.That(error, Is.EqualTo("Source and target paths may not be the same\n"), "Error differs");
+        }
+
+        [Test]
+        public void ValidatePathsNoOverlap()
+        {
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath("Samples"),
+                TargetPath = TestPath("Samples\\Foo")
+            };
+
+            var candidate = options.Validate(out var error);
+            Assert.That(candidate, Is.EqualTo(false));
+            Assert.That(error, Is.EqualTo("Target path may not be subdirectory of source path\n"), "Error differs");
+        }
+
         [TestCase("Samples\\Sample.wiki\\S1\\SS1", "Sample")]
         [TestCase("Samples\\Sample.wiki\\S2", "Sample")]
         [TestCase("Samples\\Sample.wiki", "Sample")]
+        [TestCase("Samples/Sample2", "Sample2")]
         [TestCase("Samples\\Sample2", "Sample2")]
         [TestCase("Samples", null)]
         public void ProjectNameFromWikiDirectory(string path, string expected)
@@ -80,6 +138,7 @@ namespace WikiExport.Test
             Assert.That(candidate, Is.EqualTo(expected), "Name differs");
         }
 
+        [TestCase("C:\\Sample.wiki\\S2-Foo/S3: Bar", "C:\\Sample.wiki\\S2%2DFoo/S3%3A-Bar")]
         [TestCase("C:\\Sample.wiki\\S2-Foo\\S3: Bar", "C:\\Sample.wiki\\S2%2DFoo\\S3%3A-Bar")]
         public void FixupPath(string name, string expected)
         {
