@@ -187,7 +187,6 @@ namespace WikiExport
             private readonly string sourcePath;
             private readonly string targetPath;
             private readonly bool retainCaption;
-            private bool found;
             private DirectoryInfo directory;
             private ILogger logger;
 
@@ -197,19 +196,15 @@ namespace WikiExport
                 this.targetPath = targetPath;
                 this.retainCaption = retainCaption;
                 this.logger = logger;
-                found = false;
             }
 
             public string Replace(Match match)
             {
-                if (!found && !Directory.Exists(targetPath))
+                if (directory == null)
                 {
-                    // Ensure the target directory exists
-                    // Create on first capture only - avoids empty directory if no attachments
+                    // Create/assign on capture only - avoids empty directory if no attachments
                     directory = Directory.CreateDirectory(targetPath);
-                    logger.LogInformation($"Creating local attachments folder: ${targetPath}");
-
-                    found = true;
+                    logger.LogInformation($"Local attachments folder: ${targetPath}");
                 }
 
                 var attachmentName = match.Groups["name"].Value;

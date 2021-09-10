@@ -29,6 +29,7 @@ namespace WikiExport
                             {
                                 l.ClearProviders();
                                 l.AddConsole()
+                                 .AddDebug()
                                  .SetMinimumLevel(options.Logging);
                             })
                             .Build();
