@@ -210,7 +210,11 @@ namespace WikiExport
                 // Copy it so we can find it
                 // Can have %20 etc
                 var fileName = HttpUtility.UrlDecode(attachmentName);
-                File.Copy(Path.Combine(sourcePath, fileName), Path.Combine(targetPath, fileName), true);
+                var targetName = Path.Combine(targetPath, fileName);
+                var targetDirectory = Path.GetDirectoryName(targetName);
+                // Handles images in subfolders of the root attachments folder
+                Directory.CreateDirectory(targetDirectory);
+                File.Copy(Path.Combine(sourcePath, fileName), targetName, true);
 
                 // And change the path to relative to where we are
                 return $"[{caption}]({Path.Combine(directory.Name, attachmentName)})";

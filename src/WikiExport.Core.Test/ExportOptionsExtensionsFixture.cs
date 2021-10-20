@@ -290,6 +290,7 @@ namespace WikiExport.Test
         [TestCase("Samples\\Sample.wiki\\S1\\SS1", null, "Sample SS1")]
         [TestCase("Samples\\Sample.wiki\\S1", "SS1", "Sample SS1")]
         [TestCase("Samples\\Sample.wiki\\S1", "My-Section", "Sample My Section")]
+        [TestCase("Samples\\Sample.wiki\\S1", "My%2DSection", "Sample My-Section")]
         [TestCase("Samples\\Sample.wiki\\S2", null, "Sample S2")]
         [TestCase("Samples\\Sample.wiki", null, "Sample")]
         [TestCase("Samples\\Sample2", null, "Sample2")]
