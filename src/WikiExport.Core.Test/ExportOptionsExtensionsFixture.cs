@@ -138,6 +138,7 @@ namespace WikiExport.Test
             Assert.That(candidate, Is.EqualTo(expected), "Name differs");
         }
 
+        [TestCase("C:\\Sample%20Wiki\\S1", "C:\\Sample%20Wiki\\S1")]
         [TestCase("C:\\Sample.wiki\\S2-Foo/S3: Bar", "C:\\Sample.wiki\\S2%2DFoo/S3%3A-Bar")]
         [TestCase("C:\\Sample.wiki\\S2-Foo\\S3: Bar", "C:\\Sample.wiki\\S2%2DFoo\\S3%3A-Bar")]
         public void FixupPath(string name, string expected)

@@ -383,6 +383,7 @@ namespace WikiExport
                     value = $"{value[0]}:{value.Substring(4)}";
                 }
                 // So it works for path
+                value = value?.Replace("%25", "%");
                 value = value?.Replace("%5C", "\\");
                 value = value?.Replace("%2F", "/");
             }
