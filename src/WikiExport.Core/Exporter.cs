@@ -217,7 +217,7 @@ namespace WikiExport
                 File.Copy(Path.Combine(sourcePath, fileName), targetName, true);
 
                 // And change the path to relative to where we are
-                return $"[{caption}]({Path.Combine(directory.Name, attachmentName)})";
+                return $"[{caption}]({directory.Name}/{attachmentName})";
             }
         }
     }
