@@ -88,7 +88,7 @@ namespace WikiExport
 
         private void FixAttachmentReferences(string fileName, string targetFile, ExportOptions options)
         {
-            const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>/.attachments)/(?<name>.+)\)";
+            const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>.*/.attachments)/(?<name>.+)\)";
 
             // Find the wiki root (options or just walk until we find a .attachments folder?)
             var attachmentSourcePath = options.SourcePath.AttachmentPath();
