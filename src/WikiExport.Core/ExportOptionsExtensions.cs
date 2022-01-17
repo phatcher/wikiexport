@@ -43,7 +43,7 @@ namespace WikiExport
             }
             else if (options.TargetPath.StartsWith(options.SourcePath))
             {
-                error += "Target path may not be subdirectory of source path\n";
+                error += "Target path may not be a subdirectory of source path\n";
 
             }
             return error.Length == 0;
@@ -188,7 +188,7 @@ namespace WikiExport
             string root = null;
 
             var candidate = new DirectoryInfo(path);
-            while (candidate.FullName.HasOrderFile())
+            while (candidate != null && candidate.FullName.HasOrderFile())
             {
                 root = candidate.FullName;
                 candidate = candidate.Parent;
@@ -280,7 +280,7 @@ namespace WikiExport
             if (!string.IsNullOrEmpty(result))
             {
                 // Replace the hyphens first so we don't confuse with %2D
-                result = result?.Replace('-', ' ');
+                result = result.Replace('-', ' ');
                 result = WebUtility.UrlDecode(result);
             }
 
@@ -380,12 +380,12 @@ namespace WikiExport
                 if (value.IndexOf("%3A", StringComparison.InvariantCultureIgnoreCase) == 1)
                 {
                     // Just replace the first %2D with a colon as it's a drive letter
-                    value = $"{value[0]}:{value.Substring(4)}";
+                    value = $"{value[0]}:{value[4..]}";
                 }
                 // So it works for path
-                value = value?.Replace("%25", "%");
-                value = value?.Replace("%5C", "\\");
-                value = value?.Replace("%2F", "/");
+                value = value.Replace("%25", "%");
+                value = value.Replace("%5C", "\\");
+                value = value.Replace("%2F", "/");
             }
 
             return value;

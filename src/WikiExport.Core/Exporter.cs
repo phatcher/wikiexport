@@ -166,6 +166,7 @@ namespace WikiExport
             var orderFile = path.WikiOrderingFile();
             if (!File.Exists(orderFile))
             {
+                // TODO: Raise warning and just process md files?
                 throw logger.LogRaiseException($"No .order file in '{path}'");
             }
 
@@ -202,7 +203,7 @@ namespace WikiExport
             public string Replace(Match match)
             {
                 var attachmentName = match.Groups["name"].Value;
-                var caption = match.Groups["caption"].Value;
+                var caption = retainCaption ? match.Groups["caption"].Value : string.Empty;
 
                 // Decode it so we can find it
                 // Can have %20 etc

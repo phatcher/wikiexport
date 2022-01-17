@@ -4,6 +4,34 @@
     <RootNamespace>WikiExport.Test</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Samples\MissingOrder.wiki\.order" />
+    <None Remove="Samples\MissingOrder.wiki\Main.md" />
+    <None Remove="Samples\MissingOrder.wiki\S1.md" />
+    <None Remove="Samples\MissingOrder.wiki\S1\Bar.md" />
+    <None Remove="Samples\MissingOrder.wiki\S1\Foo.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Samples\MissingOrder.wiki\.attachments\architecture\artifacts.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\MissingOrder.wiki\.attachments\togaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\MissingOrder.wiki\.order">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\MissingOrder.wiki\Main.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\MissingOrder.wiki\S1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\MissingOrder.wiki\S1\Bar.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\MissingOrder.wiki\S1\Foo.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Samples\Sample.wiki\.attachments\architecture\artifacts.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -63,11 +91,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="1.3.0" Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="coverlet.collector" Version="3.1.0" Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="NUnit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
@@ -76,6 +104,9 @@
     <ProjectReference Include="..\WikiExport.Core\WikiExport.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Results\Caption\Sample SS1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Results\Defaults\Sample S1.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
