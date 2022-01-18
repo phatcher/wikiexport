@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Web;
 
 using Microsoft.Extensions.Logging;
 
@@ -88,21 +86,18 @@ namespace WikiExport
 
         private void FixAttachmentReferences(string fileName, string targetFile, ExportOptions options)
         {
-            const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>/.attachments)/(?<name>.+)\)";
-
             // Find the wiki root (options or just walk until we find a .attachments folder?)
             var attachmentSourcePath = options.SourcePath.AttachmentPath();
 
             var attachmentTargetPath = Path.Combine(options.TargetPath, targetFile + "-attachments");
             logger.LogInformation($"Attachments will be output to ${attachmentTargetPath}");
 
-            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption, logger);
-
             // Get the data
             var source = File.ReadAllText(fileName);
 
             // Fix up the references, plus copy the files
-            var result = Regex.Replace(source, attachmentFinder, fixer.Replace);
+            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption);
+            var result = fixer.Fix(source);
 
             // And write back the updated references
             File.WriteAllText(fileName, result);
@@ -169,6 +164,7 @@ namespace WikiExport
             var orderFile = path.WikiOrderingFile();
             if (!File.Exists(orderFile))
             {
+                // TODO: Raise warning and just process md files?
                 throw logger.LogRaiseException($"No .order file in '{path}'");
             }
 
@@ -176,48 +172,6 @@ namespace WikiExport
             foreach (var file in files)
             {
                 AddWikiFile(writer, path, file, level, options);
-            }
-        }
-
-        private class AttachmentFixer
-        {
-            private readonly string sourcePath;
-            private readonly string targetPath;
-            private readonly bool retainCaption;
-            private DirectoryInfo directory;
-            private ILogger logger;
-
-            public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption, ILogger logger)
-            {
-                this.sourcePath = sourcePath;
-                this.targetPath = targetPath;
-                this.retainCaption = retainCaption;
-                this.logger = logger;
-            }
-
-            public string Replace(Match match)
-            {
-                if (directory == null)
-                {
-                    // Create/assign on capture only - avoids empty directory if no attachments
-                    directory = Directory.CreateDirectory(targetPath);
-                    logger.LogInformation($"Local attachments folder: ${targetPath}");
-                }
-
-                var attachmentName = match.Groups["name"].Value;
-                var caption = retainCaption ? match.Groups["caption"].Value : string.Empty;
-
-                // Copy it so we can find it
-                // Can have %20 etc
-                var fileName = HttpUtility.UrlDecode(attachmentName);
-                var targetName = Path.Combine(targetPath, fileName);
-                var targetDirectory = Path.GetDirectoryName(targetName);
-                // Handles images in subfolders of the root attachments folder
-                Directory.CreateDirectory(targetDirectory);
-                File.Copy(Path.Combine(sourcePath, fileName), targetName, true);
-
-                // And change the path to relative to where we are
-                return $"[{caption}]({Path.Combine(directory.Name, attachmentName)})";
             }
         }
     }

@@ -76,7 +76,7 @@ namespace WikiExport.Test
 
             var candidate = options.Validate(out var error);
             Assert.That(candidate, Is.EqualTo(false));
-            Assert.That(error, Is.EqualTo("Target path may not be subdirectory of source path\n"), "Error differs");
+            Assert.That(error, Is.EqualTo("Target path may not be a subdirectory of source path\n"), "Error differs");
         }
 
         [TestCase("Samples\\Sample.wiki\\S1\\SS1", "Sample")]
