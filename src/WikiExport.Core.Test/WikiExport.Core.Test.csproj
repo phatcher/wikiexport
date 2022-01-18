@@ -4,6 +4,10 @@
     <RootNamespace>WikiExport.Test</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Results\Attachments\Root\Root.md" />
+    <None Remove="Results\Attachments\Subdirectory\Subdirectory.md" />
+    <None Remove="Samples\Attachments\Root.md" />
+    <None Remove="Samples\Attachments\Subdirectory.md" />
     <None Remove="Samples\MissingOrder.wiki\.order" />
     <None Remove="Samples\MissingOrder.wiki\Main.md" />
     <None Remove="Samples\MissingOrder.wiki\S1.md" />
@@ -11,6 +15,30 @@
     <None Remove="Samples\MissingOrder.wiki\S1\Foo.md" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Results\Attachments\Root\Attachments\togaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Results\Attachments\Root\Root.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Results\Attachments\Subdirectory\Attachments\architecture\artifacts.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Results\Attachments\Subdirectory\Subdirectory.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Attachments\.attachments\architecture\artifacts.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Attachments\.attachments\togaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Attachments\Subdirectory.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Attachments\Root.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Samples\MissingOrder.wiki\.attachments\architecture\artifacts.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

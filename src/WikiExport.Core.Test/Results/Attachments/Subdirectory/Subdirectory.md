@@ -1,0 +1,1 @@
+﻿![](Attachments\architecture/artifacts.png)
