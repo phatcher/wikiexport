@@ -1,1 +1,1 @@
-﻿![](Attachments\architecture/artifacts.png)
+﻿![](Attachments/architecture/artifacts.png)

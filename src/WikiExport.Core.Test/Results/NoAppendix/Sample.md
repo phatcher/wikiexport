@@ -24,7 +24,7 @@ Bar content
 
 Bar subsection content
 
-![](Sample-attachments\architecture/artifacts.png)
+![](Sample-attachments/architecture/artifacts.png)
 
 ## SS1
 SS1 content
@@ -36,7 +36,7 @@ Zah content
 
 Zah subsection content
 
-![](Sample-attachments\togaf.png)
+![](Sample-attachments/togaf.png)
 
 # S2
 This is another section

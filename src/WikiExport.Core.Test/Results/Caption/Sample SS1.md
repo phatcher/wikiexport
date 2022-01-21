@@ -13,5 +13,5 @@ Zah content
 
 Zah subsection content
 
-![togaf.png](Sample SS1-attachments\togaf.png)
+![togaf.png](Sample SS1-attachments/togaf.png)
 

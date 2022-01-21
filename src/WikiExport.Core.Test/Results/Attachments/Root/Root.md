@@ -1,1 +1,1 @@
-﻿![togaf.png](Attachments\togaf.png)
+﻿![togaf.png](Attachments/togaf.png)
