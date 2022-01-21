@@ -10,6 +10,7 @@ using NUnit.Framework;
 namespace WikiExport.Test
 {
     [TestFixture]
+    [SetCulture("en-GB")] // The samples include culture-specific dates - force these tests to run with a culture that is compatible with the samples
     public class ExporterFixture
     {
         [TestCase("Samples/Sample.wiki/S1", "SS1", "Sample SS1")]
