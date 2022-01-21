@@ -46,6 +46,53 @@ namespace WikiExport.Test
             Export(section, result, options);
         }
 
+        [TestCase("Samples\\Sample.wiki\\S1", "SS1", "Sample SS1")]
+        public void Caption(string path, string file, string result)
+        {
+            var section = "Caption";
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath(path),
+                SourceFile = file,
+                TargetPath = OutputPath(section),
+                RetainCaption = true
+            };
+
+            Export(section, result, options);
+        }
+
+        [TestCase("Samples\\Sample.wiki", null, "Sample")]
+        public void ValidationError(string path, string file, string result)
+        {
+            var section = "Errors";
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath(path),
+                SourceFile = file,
+                TargetPath = TestPath(path),
+                RetainCaption = true
+            };
+
+            // NOTE: We test the actual validation errors elsewhere
+            var ex = Assert.Throws<Exception>(() => Export(section, result, options));
+        }
+
+        [TestCase("Samples\\MissingOrder.wiki", null, "Sample")]
+        public void MissingOrder(string path, string file, string result)
+        {
+            var section = "MissingOrder";
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath(path),
+                SourceFile = file,
+                TargetPath = OutputPath(section),
+                RetainCaption = true
+            };
+
+            var ex = Assert.Throws<Exception>(() => Export(section, result, options));
+            Assert.That(ex.Message, Does.StartWith("No .order file in"));
+        }
+
         private void Export(string section, string result, ExportOptions options)
         {
             var logger = new Mock<ILogger<Exporter>>();
