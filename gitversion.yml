@@ -4,8 +4,6 @@ branches:
         tag: ''
     release:
         tag: ''
-    pullrequest:
-        tag: 'beta'
 assembly-informational-format: '{AssemblySemVer} {ShortSha}'
 ignore:
     sha: []
