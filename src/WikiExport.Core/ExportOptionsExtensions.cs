@@ -85,10 +85,24 @@ namespace WikiExport
 
             if (options.ProjectInTitle)
             {
-                value = string.Format(options.TitleFormat, options.ProjectName().WikiDecode(), value);
+                value = string.Format(options.PositionalTitleFormat(), options.ProjectName().WikiDecode(), value);
             }
 
             return value.Trim();
+        }
+
+        /// <summary>
+        /// Converts the TitleFormat into a version that can be used with positional arguments
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static string PositionalTitleFormat(this ExportOptions options)
+        {
+            var format = options.TitleFormat
+                .Replace("{project}", "{0}")
+                .Replace("{title}", "{1}");
+
+            return format;
         }
 
         /// <summary>
