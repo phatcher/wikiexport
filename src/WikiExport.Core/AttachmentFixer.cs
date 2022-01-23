@@ -11,7 +11,7 @@ namespace WikiExport
         private readonly bool retainCaption;
 
         // TODO: Worthwhile having this as a static compiled regex?
-        const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>/.attachments)/(?<name>.+)\)";
+        const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>.*/?.attachments)/(?<name>.+)\)";
 
         public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption)
         {
@@ -47,7 +47,7 @@ namespace WikiExport
 
             // And change the path to relative to where we want to be with the encoded name
             var directory = new DirectoryInfo(targetPath);
-            return $"[{caption}]({Path.Combine(directory.Name, attachmentName)})";
+            return $"[{caption}]({directory.Name}/{attachmentName})";
         }
     }
 }

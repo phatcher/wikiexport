@@ -15,14 +15,20 @@ namespace WikiExport.Test
         }
 
         [Test]
+        public void NonRoot()
+        {
+            Fix("NonRoot", true, "SubDir");
+        }
+
+        [Test]
         public void Subdirectory()
         {
             Fix("Subdirectory", false);
         }
 
-        public void Fix(string name, bool retainCaption)
+        public void Fix(string name, bool retainCaption, string path = "")
         {
-            var source = File.ReadAllText(SamplesPath($"{name}.md"));
+            var source = File.ReadAllText(SamplesPath(Path.Combine(path, $"{name}.md")));
             var sourceAttachmentsPath = SamplesPath(".attachments");
 
             // Standard name for the attachments output
@@ -33,7 +39,7 @@ namespace WikiExport.Test
             var resultsPath = ResultPath(name);
             var resultsAttachmentPath = Path.Combine(resultsPath, "Attachments");
 
-            var expected = File.ReadAllText(Path.Combine(resultsPath, $"{name}.md"));
+            var expected = File.ReadAllText(Path.Combine(resultsPath, path, $"{name}.md"));
 
             var fixer = new AttachmentFixer(sourceAttachmentsPath, outputAttachmentsPath, retainCaption);
 
