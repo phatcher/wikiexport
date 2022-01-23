@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+
 using Microsoft.Extensions.Logging;
 
 namespace WikiExport
@@ -12,11 +13,10 @@ namespace WikiExport
         {
             AutoHeader = true;
             AutoLevel = true;
-            ProjectInTitle = true;
             AppendixProcessing = true;
             AppendixHeadingLevel = 6;
             TableOfContents = true;
-            TitleFormat = "{0} {1}";
+            TitleFormat = "{project} {title}";
             Logging = LogLevel.Warning;
         }
 
@@ -27,15 +27,14 @@ namespace WikiExport
         public string Project { get; set; }
 
         /// <summary>
-        /// Get or set whether to include the project in the title
+        /// Get whether to include the project in the title
         /// </summary>
-        [Option("projectInTitle", Default = true, Required = false, HelpText = "Whether to include the project in the title")]
-        public bool ProjectInTitle { get; set; }
+        public bool ProjectInTitle => TitleFormat.Contains("{project}") || TitleFormat.Contains("{0}");
 
         /// <summary>
         /// Gets or sets the title format
         /// </summary>
-        [Option("titleFormat", Default = "{0} {1}", Required = false, HelpText = "Title formatting, can include 0:{project} and 1:{title}")]
+        [Option("titleFormat", Default = "{project} {title}", Required = false, HelpText = "Allows specification of different order + special characters")]
         public string TitleFormat { get; set; }
 
         /// <summary>

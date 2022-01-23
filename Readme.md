@@ -35,9 +35,8 @@ We adjust the raw markdown in a number of ways - most of which can be changed by
 The options default settings have been initialized to values that "just work", if need something different you should be able to adjust the option settings to suit; if not raise a ticket and we can see how to help.
 
 * *-p* *--project*: Project name defaults to the wiki root (less .wiki if present)
-* *--projectInTitle*: Whether to include the project in the title, Defaults to true
 * *--title*: Document title to use, defaults to **Project SourceFile**
-* *--titleFormat*: Defaults to "{0} {1}" where 0 = Project and 1 = Title, allows specification of different order + special characters.
+* *--titleFormat*: Defaults to "{project} {title}" allows specification of different order + special characters.
 * *-a* *--author*: Author name, used as document metadata
 * *-s* *--source*: Source path
 * *-f* *--file*: Source file, defaults to entire Source Path if not present

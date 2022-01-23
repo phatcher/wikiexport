@@ -210,7 +210,9 @@ namespace WikiExport.Test
 
         /// <remarks>Variations on using wiki-derived vs explicit title are covered above</remarks>
         [TestCase("P1-A", "My-Title", "", true, "P1 A My Title")]
+        [TestCase("P1-A", "My-Title", "{project}: {title}", true, "P1 A: My Title")]
         [TestCase("P1-A", "My-Title", "{0}: {1}", true, "P1 A: My Title")]
+        [TestCase("P1-A", "My-Title", "{title}: {project}", true, "My Title: P1 A")]
         [TestCase("P1-A", "My-Title", "", false, "My Title")]
         [TestCase("P1-A", "Conceptual-Level%3A-Behaviour", "", true, "P1 A Conceptual Level: Behaviour")]
         public void DocumentTitleFormatting(string projectName, string title, string format, bool includeProject, string expected)
@@ -219,8 +221,12 @@ namespace WikiExport.Test
             {
                 Project = projectName,
                 Title = title,
-                ProjectInTitle = includeProject,
             };
+
+            if (!includeProject)
+            {
+                options.TitleFormat = "{title}";
+            }
 
             if (!string.IsNullOrEmpty(format))
             {
@@ -263,9 +269,9 @@ namespace WikiExport.Test
         {
             var options = new ExportOptions
             {
-                SourcePath     = TestPath(path),
-                SourceFile     = file,
-                ProjectInTitle = false
+                SourcePath  = TestPath(path),
+                SourceFile  = file,
+                TitleFormat = "{title}"
             };
 
             var candidate = options.DocumentTitle();

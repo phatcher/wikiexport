@@ -3,7 +3,7 @@ branches:
     main:
         tag: ''
     release:
-        tag: beta
+        tag: ''
 assembly-informational-format: '{AssemblySemVer} {ShortSha}'
 ignore:
     sha: []
