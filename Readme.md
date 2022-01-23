@@ -56,6 +56,30 @@ To get the best results and the easiest formatting we use the following settings
 1. All headings within a wiki section should start from H2, we consider each document to be its own H1 and then automatically infer the actual level based on the folder structure 
 1. Do not replicate the document title as a heading, we do that for you (see `-autoheading`) 
 
+## Code Wikis
+
+If you are publishing a [code wiki](https://docs.microsoft.com/en-us/azure/devops/project/wiki/publish-repo-to-wiki?view=azure-devops&tabs=browser) your image folder may not be in the repository root, e.g. the repository may look a bit like this...
+
+```
+$
+  src
+    ...
+  wiki
+    .attachments
+      cat.png
+    .order
+    doc.md
+```
+For this to work as a wiki, the image references need to be like this `/wiki/.attachments/cat.png` 
+
+It is possible to have the `.attachements` folder in
+
+* Root of repostory
+* Root of code wiki
+* Any sub-folder of the code wiki folder
+
+and the tool will still convert the image references correctly on export. 
+
 ### Appendices
 
 The markdown we output is typically an intermediate format on the way to a Word or PDF document which can provide formatting etc, but one issue is what to do with appendicies such as the bibliography or glossary.
