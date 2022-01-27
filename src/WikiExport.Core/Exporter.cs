@@ -1,6 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
-
+using System.Text;
 using Microsoft.Extensions.Logging;
 
 namespace WikiExport
@@ -25,7 +26,9 @@ namespace WikiExport
             // Now validate them
             if (!options.Validate(out var error))
             {
-                throw logger.LogRaiseException(error);
+                // NOTE: Can't use LogException as we always need to throw for this one
+                logger.LogCritical(error);
+                throw new Exception(error);
             }
 
             // Work out what to call the target
@@ -67,6 +70,17 @@ namespace WikiExport
             //}
 
             FixAttachmentReferences(fileName, targetFile, options);
+
+            if (options.ErrorMessages.Count > 0)
+            {
+                var sb = new StringBuilder();
+                foreach (var s in options.ErrorMessages)
+                {
+                    sb.AppendLine(s);
+                }
+
+                throw new Exception(sb.ToString());
+            }
         }
 
         private void WriteMetadata(StreamWriter writer, ExportOptions options)
@@ -117,7 +131,8 @@ namespace WikiExport
             var sourceFile = path.WikiFileName(file);
             if (!File.Exists(sourceFile))
             {
-                throw logger.LogRaiseException($"No {file}.md in '{path}'");
+                logger.LogException(LogLevel.Error, $"No {file}.md in '{path}'", options);
+                return;
             }
 
             if (options.AutoHeader && level > 0)
@@ -161,14 +176,7 @@ namespace WikiExport
         /// <param name="options"></param>
         private void AddWikiDirectory(StreamWriter writer, string path, int level, ExportOptions options)
         {
-            var orderFile = path.WikiOrderingFile();
-            if (!File.Exists(orderFile))
-            {
-                // TODO: Raise warning and just process md files?
-                throw logger.LogRaiseException($"No .order file in '{path}'");
-            }
-
-            var files = File.ReadAllLines(orderFile);
+            var files = path.WikiFiles(logger, options);
             foreach (var file in files)
             {
                 AddWikiFile(writer, path, file, level, options);

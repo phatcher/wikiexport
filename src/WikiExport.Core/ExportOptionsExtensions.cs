@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+
+using Microsoft.Extensions.Logging;
 
 namespace WikiExport
 {
@@ -380,6 +383,26 @@ namespace WikiExport
                 // Don't crash, just return the name we started with
                 return name;
             }
+        }
+
+        /// <summary>
+        /// Find wiki files to process, preferably via the .order file but otherwise all .md files
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="logger"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static IList<string> WikiFiles(this string path, ILogger logger, ExportOptions options)
+        {
+            var orderFile = path.WikiOrderingFile();
+            if (File.Exists(orderFile))
+            {
+                return File.ReadAllLines(orderFile);
+            }
+
+            logger.LogException(LogLevel.Error, $"No .order file in '{path}'", options);
+
+            return Directory.GetFiles(path, "*.md").Select(Path.GetFileNameWithoutExtension).ToList();
         }
 
         /// <summary>

@@ -7,7 +7,6 @@ This can then be passed into a tool such as `pandoc` to convert to another forma
 [![NuGet](https://img.shields.io/nuget/v/dotnet-wikiexport.svg)](https://www.nuget.org/packages/dotnet-wikiexport/)
 [![Build Status](https://dev.azure.com/paulhatcher/wikiexport/_apis/build/status/phatcher.wikiexport?repoName=phatcher%2Fwikiexport&branchName=main)](https://dev.azure.com/paulhatcher/wikiexport/_build/latest?definitionId=1&repoName=phatcher%2Fwikiexport&branchName=main)
 
-
 # Installation
 
 This will install the latest official version from nuget
@@ -48,6 +47,13 @@ The options default settings have been initialized to values that "just work", i
 * *--appendix*: Whether we automatically detect/process appendices. Defaults to true
 * *--appendixLevel*: What heading level do appendices start from. Defaults to 6
 * *--log*: Set the logging level. Defaults to Warning
+* *-e* *--error*: Logging level considered a fatal error. Defaults to Error
+
+## Error Handling
+
+By default if we find an error we raise an exception and quit. This is so we when running in a DevOps pipeline, we exit and don't trigger the next stage, typically converting the markdown to docx/pdf. Otherwise as far as your concerned the generation all worked nicely and your documents will be correct.
+
+You can choose to ignore errors such as missing `.order`, markdown files or images by setting the error level to `Critical`. The application will then make a best efforts to produce a markdown file and not raise an error.
 
 ## Wiki Formatting
 

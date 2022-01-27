@@ -14,8 +14,13 @@ namespace WikiExport
         {
             try
             {
+                var parser = new Parser(x =>
+                {
+                    x.IgnoreUnknownArguments = true;
+                });
+
                 // Based on https://wildermuth.com/2020/08/02/NET-Core-Console-Apps---A-Better-Way
-                Parser.Default.ParseArguments<ExportOptions>(args)
+                parser.ParseArguments<ExportOptions>(args)
                     .WithParsed(options =>
                     {
                         Console.WriteLine("wikiexport");

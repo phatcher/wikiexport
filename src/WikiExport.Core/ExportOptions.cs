@@ -1,4 +1,6 @@
-﻿using CommandLine;
+﻿using System.Collections.Generic;
+
+using CommandLine;
 
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +20,14 @@ namespace WikiExport
             TableOfContents = true;
             TitleFormat = "{project} {title}";
             Logging = LogLevel.Warning;
+            FatalErrorLevel = LogLevel.Error;
+            ErrorMessages = new List<string>();
         }
+
+        /// <summary>
+        /// Get or set the number of errors found
+        /// </summary>
+        public IList<string> ErrorMessages { get; }
 
         /// <summary>
         /// Get or set the project name, defaults to the source name less .wiki
@@ -114,5 +123,8 @@ namespace WikiExport
         /// </summary>
         [Option("log", Default = LogLevel.Warning, Required = false, HelpText = "Set the logging level")]
         public LogLevel Logging { get; set; }
+
+        [Option('e', "error", Default = LogLevel.Error, Required = false, HelpText = "Logging level considered a fatal error")]
+        public LogLevel FatalErrorLevel { get; set; }
     }
 }

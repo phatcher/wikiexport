@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+
+using MELT;
 
 using Microsoft.Extensions.Logging;
-
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 
 using NUnit.Framework;
 
@@ -75,13 +77,29 @@ namespace WikiExport.Test
             };
 
             // NOTE: We test the actual validation errors elsewhere
-            var ex = Assert.Throws<Exception>(() => Export(section, result, options));
+            Assert.Throws<Exception>(() => Export(section, result, options));
         }
 
-        [TestCase("Samples\\MissingOrder.wiki", null, "Sample")]
-        public void MissingOrder(string path, string file, string result)
+        [TestCase("Samples\\Missing.wiki", null, "Missing")]
+        public void Missing(string path, string file, string result)
         {
-            var section = "MissingOrder";
+            var section = "Missing";
+            var options = new ExportOptions
+            {
+                SourcePath = TestPath(path),
+                SourceFile = file,
+                TargetPath = OutputPath(section),
+                RetainCaption = true,
+                FatalErrorLevel = LogLevel.Critical
+            };
+
+            Export(section, result, options);
+        }
+
+        [TestCase("Samples\\Missing.wiki", null, "Missing")]
+        public void MissingException(string path, string file, string result)
+        {
+            var section = "Missing";
             var options = new ExportOptions
             {
                 SourcePath = TestPath(path),
@@ -90,15 +108,24 @@ namespace WikiExport.Test
                 RetainCaption = true
             };
 
-            var ex = Assert.Throws<Exception>(() => Export(section, result, options));
-            Assert.That(ex.Message, Does.StartWith("No .order file in"));
+            var loggerFactory = TestLoggerFactory.Create();
+            var logger = loggerFactory.CreateLogger<Exporter>();
+
+            Assert.Throws<Exception>(() => Export(section, result, options, logger));
+
+            var logs = loggerFactory.Sink.LogEntries.ToList();
+            var missingOrder = logs.Where(x => x.Message != null && x.Message.StartsWith("No .order file in")).ToList();
+            Assert.That(missingOrder.Count(), Is.EqualTo(1));
+
+            var missingFile = logs.Where(x => x.Message != null && x.Message.StartsWith("No S2.md in")).ToList();
+            Assert.That(missingFile.Count(), Is.EqualTo(1));
         }
 
-        private void Export(string section, string result, ExportOptions options)
+        private void Export(string section, string result, ExportOptions options, ILogger<Exporter> logger = null)
         {
-            var logger = new Mock<ILogger<Exporter>>();
+            logger ??= new NullLogger<Exporter>();
 
-            var exporter = new Exporter(logger.Object)
+            var exporter = new Exporter(logger)
             {
                 ExportDate = new DateTime(2021, 9, 1)
             };
@@ -113,8 +140,8 @@ namespace WikiExport.Test
             var sourceFile = OutputPath(path).WikiFileName(name);
             var targetFile = ResultPath(path).WikiFileName(name);
 
-            var sourceData = File.ReadAllText(sourceFile);
-            var targetData = File.ReadAllText(targetFile);
+            var sourceData = File.Exists(sourceFile) ? File.ReadAllText(sourceFile) : null;
+            var targetData = File.Exists(targetFile) ? File.ReadAllText(targetFile) : null;
 
             Assert.That(sourceData, Is.EqualTo(targetData));
         }
