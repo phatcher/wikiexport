@@ -22,10 +22,11 @@ namespace WikiExport
             Logging = LogLevel.Warning;
             FatalErrorLevel = LogLevel.Error;
             ErrorMessages = new List<string>();
+            RetainCaption = false;
         }
 
         /// <summary>
-        /// Get or set the number of errors found
+        /// Get the errors found
         /// </summary>
         public IList<string> ErrorMessages { get; }
 
@@ -86,25 +87,25 @@ namespace WikiExport
         /// Gets or sets whether we add a heading for each content file (except for the top-most file)
         /// </summary>
         [Option('h', "autoheading", Default = true, Required = false, HelpText = "Whether we add a heading for each content file (except for the top-most file)")]
-        public bool AutoHeader { get; set; }
+        public bool? AutoHeader { get; set; }
 
         /// <summary>
         /// Gets or sets whether we add a heading for the including file (except for the top-most file)
         /// </summary>
         [Option('l', "autolevel", Default = true, Required = false, HelpText = "Whether to adjust the markdown headings according to the nesting level")]
-        public bool AutoLevel { get; set; }
+        public bool? AutoLevel { get; set; }
 
         /// <summary>
         /// Gets or sets whether we retain attachment captions
         /// </summary>
         [Option('c', "retainCaption", Default = false, Required = false, HelpText = "Retain attachment captions")]
-        public bool RetainCaption { get; set; }
+        public bool? RetainCaption { get; set; }
 
         /// <summary>
         /// Gets or sets whether we automatically detect appendices in the wiki
         /// </summary>
         [Option("appendix", Default = true, Required = false, HelpText = "Whether we automatically detect/process appendices")]
-        public bool AppendixProcessing { get; set; }
+        public bool? AppendixProcessing { get; set; }
 
         /// <summary>
         /// Gets or sets the heading level at which appendices start.
@@ -116,7 +117,7 @@ namespace WikiExport
         /// Gets or set whether we want a table of contents
         /// </summary>
         [Option("toc", Default = true, Required = false, HelpText = "Whether we want a table of contents")]
-        public bool TableOfContents { get; set; }
+        public bool? TableOfContents { get; set; }
 
         /// <summary>
         /// Get or set the logging level

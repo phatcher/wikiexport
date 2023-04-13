@@ -20,12 +20,11 @@ namespace WikiExport
                 });
 
                 // Based on https://wildermuth.com/2020/08/02/NET-Core-Console-Apps---A-Better-Way
+                Console.WriteLine("wikiexport");
                 parser.ParseArguments<ExportOptions>(args)
                     .WithParsed(options =>
                     {
-                        Console.WriteLine("wikiexport");
-                        Console.WriteLine(
-                            $"Exporting {options.SourcePath} {options.SourceFile} to {options.TargetPath}");
+                        Console.WriteLine($"Exporting {options.SourcePath} {options.SourceFile} to {options.TargetPath}");
                         Console.WriteLine();
 
                         var host = Host.CreateDefaultBuilder()
@@ -41,6 +40,14 @@ namespace WikiExport
 
                         var exporter = ActivatorUtilities.CreateInstance<Exporter>(host.Services);
                         exporter.Export(options);
+                    })
+                    .WithNotParsed(errors =>
+                    {
+                        Console.WriteLine("Errors parsing command line...");
+                        foreach (var error in errors)
+                        {
+                            Console.WriteLine(error);
+                        }
                     });
             }
             catch (Exception ex)

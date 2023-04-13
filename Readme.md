@@ -47,6 +47,7 @@ The options default settings have been initialized to values that "just work", i
 * *--appendix*: Whether we automatically detect/process appendices. Defaults to true
 * *--appendixLevel*: What heading level do appendices start from. Defaults to 6
 * *--log*: Set the logging level. Defaults to Warning
+* *--toc*: Whether to generate a table of contents. Defaults to true
 * *-e* *--error*: Logging level considered a fatal error. Defaults to Error
 
 ## Error Handling
@@ -118,11 +119,11 @@ There are examples using different LaTex distributions as these have an impact o
 
 After building from the root directory of the project 
 
-`dotnet tool install dotnet-wikiexport -g --add-source build\Debug\WikiExport\netcoreapp3.1`
+`dotnet tool install dotnet-wikiexport -g --add-source build\Debug\WikiExport\net6.0`
 
 or 
 
-`dotnet tool update dotnet-wikiexport -g --add-source build\Debug\WikiExport\netcoreapp3.1`
+`dotnet tool update dotnet-wikiexport -g --add-source build\Debug\WikiExport\net6.0`
 
 
 # License

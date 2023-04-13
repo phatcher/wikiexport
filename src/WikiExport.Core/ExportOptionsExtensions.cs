@@ -157,7 +157,7 @@ namespace WikiExport
             var result = name.WikiDecode();
 
             // Either we don't need to process for appendices
-            if (options.AppendixProcessing)
+            if (options.AppendixProcessing.Value)
             {
                 result = result.AppendixName();
             }

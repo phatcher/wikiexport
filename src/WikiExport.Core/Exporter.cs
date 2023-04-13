@@ -1,7 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Text;
+
 using Microsoft.Extensions.Logging;
 
 namespace WikiExport
@@ -90,7 +90,7 @@ namespace WikiExport
             writer.WriteLine($"title: {options.DocumentTitle()}");
             writer.WriteLine($"author: {options.Author}");
             writer.WriteLine($"date: {ExportDate:d MMMM yyyy}");
-            if (options.TableOfContents)
+            if (options.TableOfContents.Value)
             {
                 writer.WriteLine("toc: yes");
             }
@@ -110,7 +110,7 @@ namespace WikiExport
             var source = File.ReadAllText(fileName);
 
             // Fix up the references, plus copy the files
-            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption);
+            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption.Value);
             var result = fixer.Fix(source);
 
             // And write back the updated references
@@ -135,9 +135,9 @@ namespace WikiExport
                 return;
             }
 
-            if (options.AutoHeader && level > 0)
+            if (options.AutoHeader.Value && level > 0)
             {
-                if (options.AppendixProcessing && file.IsAppendix())
+                if (options.AppendixProcessing.Value && file.IsAppendix())
                 {
                     // Force the level so we get the appendix heading correct
                     level = options.AppendixHeadingLevel;
@@ -148,7 +148,7 @@ namespace WikiExport
 
             foreach (var line in File.ReadAllLines(sourceFile))
             {
-                if (line.StartsWith("#") && options.AutoLevel && level > 1)
+                if (line.StartsWith("#") && options.AutoLevel.Value && level > 1)
                 {
                     // Causes the header to indent
                     writer.Write(new string('#', level-1));
