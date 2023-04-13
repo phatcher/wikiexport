@@ -1,3 +1,17 @@
+parameters:
+- name: buildPlatform
+  type: string
+  default: 'Any CPU'
+- name: buildConfiguration
+  type: string
+  default: 'Release'
+- name: publishPackages
+  type: boolean
+  default: true
+- name: securityScan
+  type: boolean
+  default: false
+
 trigger:
   batch: true
   branches:
@@ -21,8 +35,8 @@ resources:
   repositories:
     - repository: templates
       type: git
+      ref: dev
       name: templates/templates
-      ref: dotnetcli
 
 steps:
 # Check out the code and keep the token so we can tag the repository
@@ -32,13 +46,22 @@ steps:
 - template: library-template.yaml@templates
 # NB Override parameters here as needed
   parameters:
-#    solution: '**/*.sln'
-#    buildPlatform: 'Any CPU'
-#    buildConfiguration: 'Release'
+    #solution: '**/*.sln'
+    #netFramework: false
+    #sdkVersion: '6.0.100'
+    #latestNuget: false
+    buildPlatform:  ${{parameters.buildPlatform}}
+    buildConfiguration:  ${{parameters.buildConfiguration}}
+    # NOTE: This is the Excite nuget feed
     nugetFeed: '33ee36b3-29ec-4a24-9150-ff4a3fcfcbfe'
+    #nugetConfigPath: './nuget.config'
     testProjects: '**/*.sln'
-#    testFilter: '(TestCategory!=Integration)&(TestCategory!=Smoke)'
-#    testSettings: 'coverlet.runsettings'
-    publishPackages: true
+    #testFilter: '(TestCategory!=Integration)&(TestCategory!=Smoke)'
+    #testSettings: 'coverlet.runsettings'
     codeCoverage: true
-    gitTag: false
+    publishPackages: ${{parameters.publishPackages}}
+    securityScan: ${{parameters.securityScan}}
+    #packageFolder: ''
+    #gitVersionConfig: './gitversion.yml'
+    mainBranch: 'main'
+    gitTag: true
