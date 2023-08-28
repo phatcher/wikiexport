@@ -52,8 +52,7 @@ steps:
     #latestNuget: false
     buildPlatform:  ${{parameters.buildPlatform}}
     buildConfiguration:  ${{parameters.buildConfiguration}}
-    # NOTE: This is the Excite nuget feed
-    nugetFeed: '33ee36b3-29ec-4a24-9150-ff4a3fcfcbfe'
+    #nugetFeed: '2e6ddbfc-908d-4511-9857-6a728266d26c'
     #nugetConfigPath: './nuget.config'
     testProjects: '**/*.sln'
     #testFilter: '(TestCategory!=Integration)&(TestCategory!=Smoke)'
