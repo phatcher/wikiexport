@@ -2,6 +2,8 @@ mode: Mainline
 branches:
     main:
         tag: ''
+    feature:
+        tag: 'beta'
     release:
         tag: ''
 assembly-informational-format: '{AssemblySemVer} {ShortSha}'
