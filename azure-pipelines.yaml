@@ -52,7 +52,7 @@ steps:
     #latestNuget: false
     buildPlatform:  ${{parameters.buildPlatform}}
     buildConfiguration:  ${{parameters.buildConfiguration}}
-    #nugetFeed: '2e6ddbfc-908d-4511-9857-6a728266d26c'
+    nugetFeed: 'ci'
     #nugetConfigPath: './nuget.config'
     testProjects: '**/*.sln'
     #testFilter: '(TestCategory!=Integration)&(TestCategory!=Smoke)'

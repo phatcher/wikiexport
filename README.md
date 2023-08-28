@@ -27,7 +27,7 @@ We adjust the raw markdown in a number of ways - most of which can be changed by
 1. The **project title** is inferred from the wiki folder name e.g. My Project.wiki -> My Project
 1. The **document title** is inferred from the project title and the file passed to the tool e.g. given **My Wiki** and a file **Security** we make the title **My Wiki Security**
 1. We adjust titles with content files according to their nesting level e.g. if a file contains a H2 heading and it is two levels down it is changed to a H4
-1. We automatically detect sections starting with "Appendix" as appendicies and adjust their heading levels, see below for more details.
+1. We automatically detect sections starting with "Appendix" as appendices and adjust their heading levels, see below for more details.
 
 ## Options
 
@@ -81,7 +81,7 @@ For this to work as a wiki, the image references need to be like this `/wiki/.at
 
 It is possible to have the `.attachements` folder in
 
-* Root of repostory
+* Root of repository
 * Root of code wiki
 * Any sub-folder of the code wiki folder
 
@@ -89,18 +89,18 @@ and the tool will still convert the image references correctly on export.
 
 ### Appendices
 
-The markdown we output is typically an intermediate format on the way to a Word or PDF document which can provide formatting etc, but one issue is what to do with appendicies such as the bibliography or glossary.
+The markdown we output is typically an intermediate format on the way to a Word or PDF document which can provide formatting etc, but one issue is what to do with appendices such as the bibliography or glossary.
 
 There are a couple of obvious options:
 
 1. Just treat them as H1 section headings
-1. Denote them as appendicies in some way
+1. Denote them as appendices in some way
 
 For option 1, it is simple as there is no special processing required and the resulting markdown can be converted easily, but for option 2 it is a bit more tricky.
 
-If your appendix is named say "Appendix - Bibliography" and we take that directly into the unified markdown, we will generate "# Appendix - Bibilography" and end up with something like "10 Appendix - Bibliography" in the Word document. However, we can take advantage of a technique to treat higher heading formats in Word as appendix numbers.
+If your appendix is named say "Appendix - Bibliography" and we take that directly into the unified markdown, we will generate "# Appendix - Bibliography" and end up with something like "10 Appendix - Bibliography" in the Word document. However, we can take advantage of a technique to treat higher heading formats in Word as appendix numbers.
 
-With this option we treat H6 by default as the first appendix level and our "Appendix - Bibliography" will generate "###### Bibilography" which will result in "Appendix A Bibliography" in Word, dependent on your style formatting.
+With this option we treat H6 by default as the first appendix level and our "Appendix - Bibliography" will generate "###### Bibliography" which will result in "Appendix A Bibliography" in Word, dependent on your style formatting.
 
 ## Build pipelines
 
