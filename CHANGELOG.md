@@ -1,6 +1,6 @@
 v0.4.0
 Fix boolean option parsing, have to be declared as nullable
-Update to NET 6 and libraries to latest versions
+Update to NET 6/8 and libraries to latest versions
 
 v0.3.1
 Continue processing on missing .order/markdown files

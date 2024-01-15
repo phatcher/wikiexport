@@ -1,0 +1,80 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <!-- Product/copyright-->
+    <Product>wikexport</Product>
+    <Copyright>Copyright © 2021-2024 Paul Hatcher</Copyright>
+    <Authors>Paul Hatcher</Authors>
+
+    <!-- Base Nuget package information-->
+    <PackageValidationBaselineVersion>6.9.0</PackageValidationBaselineVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Based on https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/ -->
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>https://github.com/phatcher/wikiexport</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/phatcher/wikiexport</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <!--<DebugType>embedded</DebugType>-->
+
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' != 'true'">
+    <!-- Specifiy a patch version above the baseline so we don't get a version number error locally --> 
+    <AssemblyVersion>0.3.0.1</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1591;1701;1702;SYSLIB0020</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <NoWarn>1591;1701;1702;SYSLIB0020</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <Target Name="RemoveObjAndBinFolders" AfterTargets="Clean">
+    <PropertyGroup>
+      <ObjFolder>$(ProjectDir)$(BaseIntermediateOutputPath)</ObjFolder>
+      <BinFolder>$(ProjectDir)$(BaseOutputPath)</BinFolder>
+
+      <!-- Microsoft.NET.Sdk.Web sets $(BaseIntermediateOutputPath) to -->
+      <!-- an absolute path. Possibly fixed in MsBuild 18? -->
+      <BaseIntermediateOutputPathFix Condition="$(BaseIntermediateOutputPath.StartsWith($(MSBuildProjectDirectory)))">$([MSBuild]::MakeRelative(
+        $(ProjectDir),
+        $(BaseIntermediateOutputPath)
+      ))</BaseIntermediateOutputPathFix>
+    
+      <ObjFolder Condition="$(BaseIntermediateOutputPath.StartsWith($(MSBuildProjectDirectory)))">$(ProjectDir)$(BaseIntermediateOutputPathFix)</ObjFolder>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <ObjFiles Include="$(ObjFolder)/*.*"
+                Exclude="$(ObjFolder)/project.assets.json" />
+      <ObjSubFolders
+                Include="$([System.IO.Directory]::GetDirectories('$(ObjFolder)'))" />
+    </ItemGroup>
+    
+    <!-- Remove "obj" sub folders -->
+    <RemoveDir Directories="@(ObjSubFolders)" ContinueOnError="true" />
+    <!-- Remove "obj" files (keeping necessary asset file)-->
+    <Delete Files="@(ObjFiles)" />
+    
+    <!-- Remove "bin" folders -->
+    <RemoveDir Directories="$(BinFolder)" ContinueOnError="true" />
+  </Target>
+</Project>
