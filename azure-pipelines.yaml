@@ -29,7 +29,7 @@ trigger:
     - wiki/*
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 resources:
   repositories:
