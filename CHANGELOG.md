@@ -1,5 +1,7 @@
 v0.4.0
 Fix boolean option parsing, have to be declared as nullable
+Fix for missing images
+Fix for images with no caption
 Update to NET 6/8 and libraries to latest versions
 
 v0.3.1

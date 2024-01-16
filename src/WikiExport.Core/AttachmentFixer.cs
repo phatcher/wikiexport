@@ -43,7 +43,12 @@ namespace WikiExport
 
             // Handles images in subfolders of the attachments folder
             Directory.CreateDirectory(targetDirectory);
-            File.Copy(Path.Combine(sourcePath, fileName), targetName, true);
+            var source = Path.Combine(sourcePath, fileName);
+            if (File.Exists(source))
+            {
+                // Only copy if it exists
+                File.Copy(Path.Combine(sourcePath, fileName), targetName, true);
+            }
 
             // And change the path to relative to where we want to be with the encoded name
             var directory = new DirectoryInfo(targetPath);

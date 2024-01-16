@@ -32,6 +32,12 @@ namespace WikiExport.Test
             Fix("NoCaption", true);
         }
 
+        [Test]
+        public void MissingImage()
+        {
+            Fix("MissingImage", true);
+        }
+
         public void Fix(string name, bool retainCaption, string path = "")
         {
             var source = File.ReadAllText(SamplesPath(Path.Combine(path, $"{name}.md")));
@@ -65,11 +71,12 @@ namespace WikiExport.Test
 
         private IList<string> AttachmentFiles(string path)
         {
-            var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).ToList();
             var results = new List<string>();
-            foreach (var x in files)
+
+            if (Directory.Exists(path))
             {
-                results.Add(x.Remove(0, path.Length));
+                var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).ToList();
+                results.AddRange(files.Select(x => x.Remove(0, path.Length)));
             }
 
             return results;

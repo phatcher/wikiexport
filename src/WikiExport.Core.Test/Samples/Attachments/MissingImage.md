@@ -1,0 +1,1 @@
+![Foo](/.attachments/foo.png)
