@@ -11,7 +11,7 @@ namespace WikiExport
         private readonly bool retainCaption;
 
         // TODO: Worthwhile having this as a static compiled regex?
-        const string attachmentFinder = @"\[(?<caption>.+)\]\((?<path>.*/?.attachments)/(?<name>.+)\)";
+        const string attachmentFinder = @"\[(?<caption>.*)\]\((?<path>.*/?.attachments)/(?<name>.+)\)";
 
         public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption)
         {

@@ -1,0 +1,1 @@
+![](/.attachments/togaf.png)

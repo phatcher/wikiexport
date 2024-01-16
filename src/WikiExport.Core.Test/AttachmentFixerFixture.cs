@@ -26,6 +26,12 @@ namespace WikiExport.Test
             Fix("Subdirectory", false);
         }
 
+        [Test]
+        public void NoCaption()
+        {
+            Fix("NoCaption", true);
+        }
+
         public void Fix(string name, bool retainCaption, string path = "")
         {
             var source = File.ReadAllText(SamplesPath(Path.Combine(path, $"{name}.md")));
