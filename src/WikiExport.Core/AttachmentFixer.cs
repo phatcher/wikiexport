@@ -2,6 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Web;
 
+using Microsoft.Extensions.Logging;
+
 namespace WikiExport
 {
     public class AttachmentFixer
@@ -9,15 +11,17 @@ namespace WikiExport
         private readonly string sourcePath;
         private readonly string targetPath;
         private readonly bool retainCaption;
+        private readonly ILogger logger;
 
         // TODO: Worthwhile having this as a static compiled regex?
         const string attachmentFinder = @"\[(?<caption>.*)\]\((?<path>.*/?.attachments)/(?<name>.+)\)";
 
-        public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption)
+        public AttachmentFixer(string sourcePath, string targetPath, bool retainCaption, ILogger logger)
         {
             this.sourcePath = sourcePath;
             this.targetPath = targetPath;
             this.retainCaption = retainCaption;
+            this.logger = logger;
         }
 
         public string Fix(string source)
@@ -48,6 +52,10 @@ namespace WikiExport
             {
                 // Only copy if it exists
                 File.Copy(Path.Combine(sourcePath, fileName), targetName, true);
+            }
+            else
+            {
+                logger.LogWarning("Missing image {ImageName}", source);
             }
 
             // And change the path to relative to where we want to be with the encoded name

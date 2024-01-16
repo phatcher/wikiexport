@@ -40,7 +40,7 @@ namespace WikiExport
                 Directory.CreateDirectory(options.TargetPath);
             }
 
-            logger.LogInformation($"Creating output directory: ${options.TargetPath}");
+            logger.LogInformation("Creating output directory: {TargetPath}", options.TargetPath);
 
             // And start processing
             var fileName = options.TargetPath.WikiFileName(targetFile);
@@ -49,7 +49,7 @@ namespace WikiExport
                 // TODO: Option whether to put in main file or separate.
                 WriteMetadata(writer, options);
 
-                // Process on behalf of the the directory or the file, rest happens recursively
+                // Process on behalf of the directory or the file, rest happens recursively
                 if (string.IsNullOrEmpty(options.SourceFile))
                 {
                     // Pass level one as we need headings for each file 
@@ -104,13 +104,13 @@ namespace WikiExport
             var attachmentSourcePath = options.SourcePath.AttachmentPath();
 
             var attachmentTargetPath = Path.Combine(options.TargetPath, targetFile + "-attachments");
-            logger.LogInformation($"Attachments will be output to ${attachmentTargetPath}");
+            logger.LogInformation("Attachments will be output to {AttachmentTargetPath}", attachmentTargetPath);
 
             // Get the data
             var source = File.ReadAllText(fileName);
 
             // Fix up the references, plus copy the files
-            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption.Value);
+            var fixer = new AttachmentFixer(attachmentSourcePath, attachmentTargetPath, options.RetainCaption.Value, logger);
             var result = fixer.Fix(source);
 
             // And write back the updated references

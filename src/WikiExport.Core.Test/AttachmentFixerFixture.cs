@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using Microsoft.Extensions.Logging.Abstractions;
+
 using NUnit.Framework;
 
 namespace WikiExport.Test
@@ -53,7 +56,8 @@ namespace WikiExport.Test
 
             var expected = File.ReadAllText(Path.Combine(resultsPath, path, $"{name}.md"));
 
-            var fixer = new AttachmentFixer(sourceAttachmentsPath, outputAttachmentsPath, retainCaption);
+            var logger = new NullLogger<AttachmentFixer>();
+            var fixer = new AttachmentFixer(sourceAttachmentsPath, outputAttachmentsPath, retainCaption, logger);
 
             // Act
             var candidate = fixer.Fix(source);
